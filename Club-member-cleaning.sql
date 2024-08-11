@@ -172,3 +172,46 @@ SET Real_Age = LEFT(CAST(age AS VARCHAR), 2);
 --Retrieve the data relevant to our analysis
 SELECT FullName, martial_status, Age, job_title, membership_date
 FROM ClubMemberInfo;
+
+		--EXPLORATORY DATA ANALYSIS
+-- The total number of club members
+SELECT 
+	COUNT(*) AS TotalMembers
+FROM ClubMemberInfo;
+
+--Retrieve the ages of the oldest and the youngest member
+SELECT MAX(Real_Age) As Oldest_member ,
+		MIN(Real_Age) AS Youngest_member
+FROM ClubMemberInfo;
+
+--Get the count of members by age category
+SELECT
+	CASE 
+		WHEN Real_Age <= 18 THEN 'Young Member'
+		WHEN Real_Age BETWEEN 19 AND 59 THEN 'Adult Member'
+		ELSE 'Senior Member'
+	END AS AgeCategory,
+	COUNT(*) AS AgeCatCount
+FROM ClubMemberInfo
+WHERE Real_Age IS NOT NULL
+GROUP BY CASE 
+		WHEN Real_Age <= 18 THEN 'Young Member'
+		WHEN Real_Age BETWEEN 19 AND 59 THEN 'Adult Member'
+		ELSE 'Senior Member'
+	END
+ORDER BY AgeCatCount DESC;
+
+--Top 10 job title of members
+SELECT TOP 10 job_title,
+		COUNT(*) AS JobTitleCount
+FROM ClubMemberInfo
+WHERE job_title IS NOT NULL
+GROUP BY job_title
+ORDER BY JobTitleCount DESC;
+
+--Members by marital status
+SELECT martial_status,
+		COUNT(*) AS Marital_status_count
+FROM ClubMemberInfo
+GROUP BY martial_status
+ORDER BY Marital_status_count DESC;
